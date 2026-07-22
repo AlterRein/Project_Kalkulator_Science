@@ -95,7 +95,6 @@ int main() {
 				std::cout << "Masukan Eksponen: "; std::cin >> num2;
 
 				std::cout << "#HASIL PANGKAT# = " << call->hitS() << std::endl;
-				
 			}
 			else if (menuSains == '2') {
 				std::cout << "Masukan angka yang di Akar: "; std::cin >> num1;
