@@ -2,31 +2,44 @@
 #include <cstdlib>
 #include <cmath>
 
+//Class Father
 class Operator {
 protected:
-	char pangkat;
-	char akar;
 	char op;
 	double num1;
 	double num2;
-	double jumlah;
 public:
-	char c;
 
-	void setInput(char top, double tnum1, double tnum2) {
-		op = top;
-		num1 = tnum1;
-		num2 = tnum2;
-	}
-
-	virtual double hit() = 0;
+	virtual double hitB() = 0;
+	virtual double hitS() = 0;
 
 	virtual ~Operator() {}
 };
 
-class kalkulatorSains : public Operator {
+//First Child Class
+class kalkulatorBiasa : public Operator {
 public:
-	double hit() override {
+	double hitB() override {
+		switch (op) {
+		case '+': return num1 + num2;
+			break;
+		case '-': return num1 - num2;
+			break;
+		case '*': return num1 * num2;
+			break;
+		case '/':
+			if (num2 == 0) {
+				std::cout << "!! Num2 tidak boleh berisi"; return 0;
+			}
+			return num1 / num2;
+			break;
+		}
+	}
+};
+
+//Second Child Class
+class kalkulatorSains : public Operator {
+	double hitS() override {
 		if (op == 'p' || op == 'P') {
 			return pow(num1, num2);
 		}
@@ -36,103 +49,72 @@ public:
 	}
 };
 
-class kalkulatorBiasa : public Operator {
-public:
-	double hit() override {
-		switch (op) {
-		case '+':
-			jumlah = num1 + num2;
-			break;
-		case '-':
-			jumlah = num1 - num2;
-			break;
-		case '*':
-			jumlah = num1 * num2;
-			break;
-		case '/':
-			if (num2 == 0) {
-				std::cout << "!!num2 tidak boleh bernilai ";
-				jumlah = 0;
+int main() {
+	Operator* call = nullptr;
+	char cokal;
+
+	do {
+		system("cls");
+		std::cout << "===============Kalkulator Ilmiah===============" << std::endl;
+		std::cout << "           >> Berbasis OOP-MM-PR <<            " << std::endl;
+		std::cout << "           [A] -Kalkulator Biasa-              " << std::endl;
+		std::cout << "           [B] -Kalkulator Sains-              " << std::endl;
+		std::cout << "           [C] -Close Kalkulator-              " << std::endl;
+		std::cout << "===============================================" << std::endl;
+		std::cout << "           Pilih : [A] || [B] || [C]           " << std::endl;
+
+		std::cin >> cokal;
+		if (cokal == 'a' || cokal == 'A') {
+			char op;
+			double num1, num2;
+			std::cout << "Pilih Operator: [ + | - | * | / ]" << std::endl;
+			std::cout << ">> "; std::cin >> op;
+			if (op == '+' || op == '-' || op == '*' || op == '/') {
+				std::cout << "Masukan num1: "; std::cin >> num1;
+				std::cout << "Masukan num2: "; std::cin >> num2;
+				if (!std::cin) {
+					std::cout << "!! Num1 dan num2 harus berupa angka !!" << std::endl;
+					std::cin.clear(); std::cin.ignore(1000, '\n');
+				}
+				else {
+					std::cout << "#JUMLAH# = " << call->hitB() << std::endl;
+				}
 			}
-			else {
-				jumlah = num1 / num2;
+			std::cout << "Tekan enter untuk melanjutkan..." << std::endl;
+			std::cin.ignore();
+			std::cin.get();
+		}
+		else if (cokal == 'b' || cokal == 'B') {
+			char menuSains;
+			double num1, num2;
+			std::cout << "Peluh Menu Sains yang tersedia: " << std::endl;
+			std::cout << "[1] Pangkat. \n[2] Akar kuadrat." << std::endl;
+			std::cout << ">> "; std::cin >> menuSains;
+			if (menuSains == '1') {
+				std::cout << "Masukan Basis: "; std::cin >> num1;
+				std::cout << "Masukan Eksponen: "; std::cin >> num2;
+
+				std::cout << "#HASIL PANGKAT# = " << call->hitS() << std::endl;
+				
 			}
+			else if (menuSains == '2') {
+				std::cout << "Masukan angka yang di Akar: "; std::cin >> num1;
+
+				std::cout << "#HASIL AKAR# = " << call->hitS() << std::endl;
+			}
+			std::cout << "Tekan enter untuk kembali..." << std::endl;
+			std::cin.ignore(); std::cin.get();
+		}
+		else if (cokal == 'c' || cokal == 'C') {
+			std::cout << "=-=-=-=-= Terimakasih Sudah Menggunakan KALKULKATOR saya =-=-=-=-=\n" << std::endl;
 			break;
 		}
-		return jumlah;
-	}
-};
 
-int main() {
-    Operator* call = nullptr;
-    char pilihkalkulator;
+		if (call != nullptr) {
+			delete call;
+			call = nullptr;
+		}
+	} while (cokal == 'c' || cokal == 'C');
 
-    do {
-        system("cls");
-        std::cout << "=============KALKULATOR=============" << std::endl;
-        std::cout << "       >>Write in C++ (OOP)<<       " << std::endl;
-        std::cout << "      [A] Kalkulator Biasa          " << std::endl;
-        std::cout << "      [B] Kalkulator Sains          " << std::endl;
-        std::cout << "      [C] Close Kalkuator           " << std::endl;
-        std::cout << "                                    " << std::endl;
-        std::cout << ">> Pilih [A] || [B] || [C] \n";
-        std::cout << ">> "; std::cin >> pilihkalkulator;
-
-        if (pilihkalkulator == 'c' || pilihkalkulator == 'C') {
-            std::cout << "--Terimakasih sudah menggunakan KALKULATOR saya--\n";
-            break;
-        }
-
-        if (pilihkalkulator == 'a' || pilihkalkulator == 'A') {
-            call = new kalkulatorBiasa();
-
-            char op;
-            double num1, num2;
-            std::cout << "Pilih Operator (+, -, *, /): "; std::cin >> op;
-
-            if (op == '+' || op == '-' || op == '*' || op == '/') {
-                std::cout << "Masukan num1: "; std::cin >> num1;
-                std::cout << "Masukan num2: "; std::cin >> num2;
-                call->setInput(op, num1, num2);
-                std::cout << "#JUMLAH#: " << call->hit() << std::endl;
-            }
-            else {
-                std::cout << "!! Operator salah !!" << std::endl;
-            }
-
-            std::cout << "Tekan Enter untuk kembali...";
-            std::cin.ignore(); std::cin.get();
-        }
-        else if (pilihkalkulator == 'b' || pilihkalkulator == 'B') {
-            call = new kalkulatorSains();
-
-            char menuSains;
-            std::cout << "\n[1] Pangkat \n[2] Akar kuadrat \nPilih Menu: ";
-            std::cin >> menuSains;
-
-            if (menuSains == '1') {
-                double basis, eksponen;
-                std::cout << "Masukan basis: "; std::cin >> basis;
-                std::cout << "Masukan eksponen: "; std::cin >> eksponen;
-                call->setInput('p', basis, eksponen);
-                std::cout << "#JUMLAH#: " << call->hit() << std::endl;
-            }
-            else if (menuSains == '2') {
-                double angka;
-                std::cout << "Angka yang diakar: "; std::cin >> angka;
-                call->setInput('q', angka, 0);
-                std::cout << "#JUMLAH#: " << call->hit() << std::endl;
-            }
-
-            std::cout << "Tekan Enter untuk kembali...";
-            std::cin.ignore(); std::cin.get();
-        }
-        if (call != nullptr) {
-            delete call;
-            call = nullptr;
-        }
-
-    } while (pilihkalkulator != 'c' && pilihkalkulator != 'C');
-
-    return 0;
+	return 0;
 }
