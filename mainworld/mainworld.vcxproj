@@ -139,10 +139,17 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="input.cpp" />
+    <ClCompile Include="house.cpp" />
+    <ClCompile Include="kalkulatorBiasa.cpp" />
     <ClCompile Include="mainworld.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Operator.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="kalkulatorSains.h" />
+    <ClInclude Include="kalkulatorBiasa.h" />
+    <ClInclude Include="Operator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
