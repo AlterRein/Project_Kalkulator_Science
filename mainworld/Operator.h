@@ -1,6 +1,4 @@
 #pragma once
-#define OPERATOR_H
-
 //Class Father
 class Operator {
 protected:

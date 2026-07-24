@@ -1,6 +1,4 @@
 #pragma once
-#define KALKULATOR_BIASA_H
-
 #include "Operator.h"
 #include <iostream>
 

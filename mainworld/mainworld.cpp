@@ -70,6 +70,34 @@ int main() {
 				call->setInputAk(num1);
 				std::cout << "#HASIL AKAR# = " << call->hit() << std::endl;
 			}
+			else if (menuSains == '3') {
+				std::cout << "Masukan angka untuk Logaritma: "; std::cin >> num1;
+				call->setInputAk(num1);
+				std::cout << "#HASIL LOGARITMA# = " << call->hit() << std::endl;
+			}
+			else if (menuSains == '4') {
+				std::cout << "Masukan angka untuk Eksponen: "; std::cin >> num1;
+				call->setInputAk(num1);
+				std::cout << "#HASIL EKSPONEN# = " << call->hit() << std::endl;
+			}
+			else if (menuSains == '5') {
+				std::cout << "Masukan angka untuk Sinus: "; std::cin >> num1;
+				call->setInputAk(num1);
+				std::cout << "#HASIL SINUS# = " << call->hit() << std::endl;
+			}
+			else if (menuSains == '6') {
+				std::cout << "Masukan angka untuk Cosinus: "; std::cin >> num1;
+				call->setInputAk(num1);
+				std::cout << "#HASIL COSINUS# = " << call->hit() << std::endl;
+			}
+			else if (menuSains == '7') {
+				std::cout << "Masukan angka untuk Tangen: "; std::cin >> num1;
+				call->setInputAk(num1);
+				std::cout << "#HASIL TANGEN# = " << call->hit() << std::endl;
+			}
+			else {
+				std::cout << "!! Menu Tidak Valid !!";
+			}
 			std::cout << "Tekan enter untuk kembali..." << std::endl;
 			std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); std::cin.get();
 
