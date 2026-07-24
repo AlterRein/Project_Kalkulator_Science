@@ -13,6 +13,16 @@ public:
 
 	void setInputAk(double angka);
 
+	void setInputLog(double angka);
+
+	void setInputExp(double angka);
+
+	void setInputSin(double angka);
+
+	void setInputCos(double angka);
+
+	void setInputTan(double angka);
+
 	virtual double hit() = 0;
 
 	virtual ~Operator() {}
