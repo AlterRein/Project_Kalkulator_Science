@@ -1,4 +1,5 @@
 #pragma once
+
 //Class Father
 class Operator {
 protected:

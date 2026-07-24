@@ -1,10 +1,15 @@
+//Header Lib
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
 #include <string>
 #include <vector>
+#include <stack>
 #include <memory>
 #include <limits>
+#include <cctype>
+
+//include From Header Files
 #include "Operator.h"
 #include "kalkulatorBiasa.h"
 #include "kalkulatorSains.h"
@@ -33,11 +38,11 @@ int main() {
 			if (op == '+' || op == '-' || op == '*' || op == '/') {
 				std::cout << "Masukan num1: "; std::cin >> num1;
 				std::cout << "Masukan num2: "; std::cin >> num2;
-				call->setInput(op, num1, num2);
 				if (!std::cin) {
 					std::cout << "!! Num1 dan num2 harus berupa angka !!" << std::endl;
 					std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 				}
+				call->setInput(op, num1, num2);
 				std::cout << "#JUMLAH# = " << call->hit() << std::endl;
 			}
 			else {
@@ -45,7 +50,8 @@ int main() {
 			}
 
 			std::cout << "Tekan enter untuk melanjutkan..." << std::endl;
-			std::cin.ignore();
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			std::cin.get();
 
 			continue;
@@ -54,9 +60,8 @@ int main() {
 			call = std::make_unique<kalkulatorSains>();
 			char menuSains;
 			double num1, num2;
-			std::cout << "Peluh Menu Sains yang tersedia: " << std::endl;
-			std::cout << "[1] Pangkat. \n[2] Akar kuadrat." << std::endl;
-			std::cout << ">> "; std::cin >> menuSains;
+			std::cout << "Pilih Menu Sains yang tersedia : " << std::endl;
+			std::cout << ">> (1/2/3/4/5/6/7): "; std::cin >> menuSains;
 			if (menuSains == '1') {
 				std::cout << "Masukan Basis: "; std::cin >> num1;
 				std::cout << "Masukan Eksponen: "; std::cin >> num2;
@@ -72,27 +77,27 @@ int main() {
 			}
 			else if (menuSains == '3') {
 				std::cout << "Masukan angka untuk Logaritma: "; std::cin >> num1;
-				call->setInputAk(num1);
+				call->setInputLog(num1);
 				std::cout << "#HASIL LOGARITMA# = " << call->hit() << std::endl;
 			}
 			else if (menuSains == '4') {
 				std::cout << "Masukan angka untuk Eksponen: "; std::cin >> num1;
-				call->setInputAk(num1);
+				call->setInputExp(num1);
 				std::cout << "#HASIL EKSPONEN# = " << call->hit() << std::endl;
 			}
 			else if (menuSains == '5') {
 				std::cout << "Masukan angka untuk Sinus: "; std::cin >> num1;
-				call->setInputAk(num1);
+				call->setInputSin(num1);
 				std::cout << "#HASIL SINUS# = " << call->hit() << std::endl;
 			}
 			else if (menuSains == '6') {
 				std::cout << "Masukan angka untuk Cosinus: "; std::cin >> num1;
-				call->setInputAk(num1);
+				call->setInputCos(num1);
 				std::cout << "#HASIL COSINUS# = " << call->hit() << std::endl;
 			}
 			else if (menuSains == '7') {
 				std::cout << "Masukan angka untuk Tangen: "; std::cin >> num1;
-				call->setInputAk(num1);
+				call->setInputTan(num1);
 				std::cout << "#HASIL TANGEN# = " << call->hit() << std::endl;
 			}
 			else {
