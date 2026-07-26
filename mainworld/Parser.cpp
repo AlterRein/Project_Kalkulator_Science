@@ -1,63 +1,93 @@
 #include "Parser.h"
+#include <stack>
 #include <stdexcept>
+#include <map>
 
-// Fungsi pembantu untuk mengecek apakah karakter adalah operator
-bool isOperatorChar(char c) {
-    return c == '+' || c == '-' || c == '*' || c == '/' || c == '^';
+// Fungsi pembantu untuk mengecek kekuatan operator
+int getPrecedence(const std::string& op) {
+    if (op == "+" || op == "-") return 1;
+    if (op == "*" || op == "/") return 2;
+    if (op == "^") return 3;
+    return 0;
 }
 
-std::vector<Token> tokenize(const std::string& expression) {
-    std::vector<Token> tokens;
-    size_t i = 0;
-    size_t length = expression.length();
+// Pangkat (^) sifatnya Right-Associative
+bool isRightAssociative(const std::string& op) {
+    return op == "^";
+}
 
-    while (i < length) {
-        char currentChar = expression[i];
+std::vector<Token> shuntingYard(const std::vector<Token>& tokens) {
+    std::vector<Token> outputQueue;
+    std::stack<Token> opStack;
 
-        // 1. Abaikan karakter spasi
-        if (std::isspace(currentChar)) {
-            i++;
-            continue;
+    for (const auto& token : tokens) {
+        // 1. Jika token berupa Angka -> Langsung masuk ke Output
+        if (token.type == TokenType::NUMBER) {
+            outputQueue.push_back(token);
         }
+        // 2. Jika token berupa Fungsi (sin, cos, log, dll) -> Masuk ke Stack Operator
+        else if (token.type == TokenType::FUNCTION) {
+            opStack.push(token);
+        }
+        // 3. Jika token berupa Operator (+, -, *, /, ^)
+        else if (token.type == TokenType::OPERATOR) {
+            while (!opStack.empty() && opStack.top().type != TokenType::LEFT_PAREN) {
+                Token top = opStack.top();
 
-        // 2. Jika ditemui Angka atau Titik Desimal (Mendukung Floating Point)
-        if (std::isdigit(currentChar) || currentChar == '.') {
-            std::string numStr = "";
-            while (i < length && (std::isdigit(expression[i]) || expression[i] == '.')) {
-                numStr += expression[i];
-                i++;
+                int prec1 = getPrecedence(token.value);
+                int prec2 = getPrecedence(top.value);
+
+                // Pindahkan operator dari Stack ke Output jika operator di Stack lebih kuat / setara
+                if ((top.type == TokenType::OPERATOR &&
+                    ((!isRightAssociative(token.value) && prec1 <= prec2) ||
+                        (isRightAssociative(token.value) && prec1 < prec2))) ||
+                    top.type == TokenType::FUNCTION) {
+                    outputQueue.push_back(top);
+                    opStack.pop();
+                }
+                else {
+                    break;
+                }
             }
-            tokens.push_back({ TokenType::NUMBER, numStr });
+            opStack.push(token);
         }
-        // 3. Jika ditemui Karakter Teks (Fungsi Sains seperti sin, cos, tan, log, sqrt)
-        else if (std::isalpha(currentChar)) {
-            std::string funcStr = "";
-            while (i < length && std::isalpha(expression[i])) {
-                funcStr += expression[i];
-                i++;
+        // 4. Jika Kurung Buka '(' -> Masuk ke Stack
+        else if (token.type == TokenType::LEFT_PAREN) {
+            opStack.push(token);
+        }
+        // 5. Jika Kurung Tutup ')' -> Kuras Stack ke Output sampai ketemu Kurung Buka
+        else if (token.type == TokenType::RIGHT_PAREN) {
+            bool foundLeftParen = false;
+            while (!opStack.empty()) {
+                if (opStack.top().type == TokenType::LEFT_PAREN) {
+                    foundLeftParen = true;
+                    opStack.pop(); // Buang '(' dari stack
+                    break;
+                }
+                outputQueue.push_back(opStack.top());
+                opStack.pop();
             }
-            tokens.push_back({ TokenType::FUNCTION, funcStr });
-        }
-        // 4. Jika ditemui Operator Matematika
-        else if (isOperatorChar(currentChar)) {
-            tokens.push_back({ TokenType::OPERATOR, std::string(1, currentChar) });
-            i++;
-        }
-        // 5. Kurung Buka
-        else if (currentChar == '(') {
-            tokens.push_back({ TokenType::LEFT_PAREN, "(" });
-            i++;
-        }
-        // 6. Kurung Tutup
-        else if (currentChar == ')') {
-            tokens.push_back({ TokenType::RIGHT_PAREN, ")" });
-            i++;
-        }
-        // Jika ada karakter asing/tidak dikenali
-        else {
-            throw std::invalid_argument("Karakter tidak valid ditemukan dalam ekspresi: " + std::string(1, currentChar));
+
+            if (!foundLeftParen) {
+                throw std::invalid_argument("Kurung tidak seimbang! Ada ')' tanpa '(' yang cocok.");
+            }
+
+            // Jika di atas stack ada Fungsi, pindahkan juga ke Output
+            if (!opStack.empty() && opStack.top().type == TokenType::FUNCTION) {
+                outputQueue.push_back(opStack.top());
+                opStack.pop();
+            }
         }
     }
 
-    return tokens;
+    // Pindahkan sisa operator di Stack ke Output
+    while (!opStack.empty()) {
+        if (opStack.top().type == TokenType::LEFT_PAREN || opStack.top().type == TokenType::RIGHT_PAREN) {
+            throw std::invalid_argument("Kurung tidak seimbang dalam ekspresi!");
+        }
+        outputQueue.push_back(opStack.top());
+        opStack.pop();
+    }
+
+    return outputQueue;
 }

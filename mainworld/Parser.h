@@ -17,3 +17,4 @@ struct Token {
 
 //Fungsi untuk Ekspresi Tokenizer
 std::vector<Token> tokenize(const std::string& expression);
+std::vector<Token> ShuntingYard(const std::vector<Token>& tokens);

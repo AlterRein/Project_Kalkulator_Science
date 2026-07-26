@@ -10,6 +10,7 @@
 #include <cctype>
 
 //include From Header Files
+#include "Parser.h"
 #include "Operator.h"
 #include "kalkulatorBiasa.h"
 #include "kalkulatorSains.h"
@@ -113,7 +114,6 @@ int main() {
 			break;
 		}
 
-		// unique_ptr will automatically release any held object
 	} while (cokal != 'c' && cokal != 'C');
 
 	return 0;
